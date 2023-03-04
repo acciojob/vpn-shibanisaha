@@ -18,14 +18,13 @@ public class User {
 
     private String maskedIp;
 
-    private boolean connected;
+    private Boolean connected;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Connection> connectionList = new ArrayList<>();
 
     @ManyToMany
-    @JoinColumn
     private List<ServiceProvider> serviceProviderList = new ArrayList<>();
 
     @OneToOne

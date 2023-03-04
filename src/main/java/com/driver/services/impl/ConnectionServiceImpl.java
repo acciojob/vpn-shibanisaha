@@ -92,7 +92,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
 
-        sender = connect(senderId, receiver.getOriginalCountry().getCountryName().name());
+          sender = connect(senderId, receiver.getOriginalCountry().getCountryName().name());
             if(!sender.getConnected()){
                 throw new Exception("Cannot establish communication");
             }
