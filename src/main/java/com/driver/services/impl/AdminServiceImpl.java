@@ -68,11 +68,13 @@ public class AdminServiceImpl implements AdminService {
         //setting country obj attr
 
 
-        if(!isValid(countryName)){
+        CountryName countryName1;
+        try{
+            countryName1 = CountryName.valueOf(countryName.toUpperCase());
+        }catch (Exception e){
             throw new Exception("Country not found");
         }
 
-        CountryName countryName1 = CountryName.valueOf(countryName.toUpperCase());
         country.setCountryName(countryName1);
         country.setCode(countryName1.toCode());
         //setting foreign key
@@ -89,13 +91,4 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
-    private boolean isValid(String countryName){
-        for(CountryName countryName1: CountryName.values()){
-            if(countryName1.name().equals(countryName)){
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

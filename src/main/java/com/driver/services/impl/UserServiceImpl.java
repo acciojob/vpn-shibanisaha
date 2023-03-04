@@ -28,11 +28,13 @@ public class UserServiceImpl implements UserService {
 
         //creating and setting country obj
         Country countryCode = new Country();
-        if(!isValid(countryName)){
+        CountryName countryName1;
+        try {
+            countryName1 = CountryName.valueOf(countryName.toUpperCase());
+        }catch (Exception e){
             throw new Exception("Country not found");
         }
 
-        CountryName countryName1 = CountryName.valueOf(countryName.toUpperCase());
         countryCode.setCountryName(countryName1);
         countryCode.setCode(countryName1.toCode());
 
@@ -72,13 +74,4 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private boolean isValid(String countryName){
-        for(CountryName countryName1: CountryName.values()){
-            if(countryName1.name().equals(countryName)){
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

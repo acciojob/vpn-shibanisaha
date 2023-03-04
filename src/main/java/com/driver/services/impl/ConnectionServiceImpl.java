@@ -24,27 +24,34 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         Connection connection = new Connection();
         User user = userRepository2.findById(userId).get();
+        countryName = countryName.toUpperCase();
         if(user.getConnected()){
             throw new Exception("Already connected");
         }
-        else if(user.getOriginalCountry().equals(CountryName.valueOf(countryName.toUpperCase()))){
+        if(user.getOriginalCountry().getCountryName().equals(CountryName.valueOf(countryName))){
             return user;
         }
-        else if(user.getServiceProviderList().size()==0){
+        if(user.getServiceProviderList().size()==0){
             throw new Exception("Unable to connect");
-        }else {
+        }
+
             List<ServiceProvider> serviceProviders = user.getServiceProviderList();
             int serviceProviderId = Integer.MAX_VALUE;
             for(ServiceProvider serviceProvider: serviceProviders){
                 List<Country> countryList = serviceProvider.getCountryList();
                 for(Country country: countryList){
-                    if(serviceProvider.getId()<serviceProviderId && country.getCountryName().equals(CountryName.valueOf(countryName.toUpperCase()))){
-                        serviceProviderId = serviceProvider.getId();
+                    if(country.getCountryName().equals(CountryName.valueOf(countryName))){
+                        if(serviceProvider.getId() < serviceProviderId){
+                            serviceProviderId = serviceProvider.getId();
+                        }
                     }
                 }
             }
+            if(serviceProviderId == Integer.MAX_VALUE){
+                throw new Exception("Unable to connect");
+            }
             user.setConnected(true);
-            user.setMaskedIp(CountryName.valueOf(countryName.toUpperCase()).toCode()+"."+serviceProviderId+"."+userId);
+            user.setMaskedIp(CountryName.valueOf(countryName).toCode()+"."+serviceProviderId+"."+userId);
 
             connection.setUser(user);
             connection.setServiceProvider(serviceProviderRepository2.findById(serviceProviderId).get());
@@ -52,9 +59,6 @@ public class ConnectionServiceImpl implements ConnectionService {
             serviceProvider.getConnectionList().add(connection);
 
             user.getConnectionList().add(connection);
-
-            serviceProviderRepository2.save(serviceProvider);
-        }
 
 
         userRepository2.save(user);
@@ -66,11 +70,11 @@ public class ConnectionServiceImpl implements ConnectionService {
         User user = userRepository2.findById(userId).get();
         if(!user.getConnected()){
             throw new Exception("Already disconnected");
-        }else{
+        }
             user.setMaskedIp(null);
             user.setConnected(false);
 
-        }
+
 
         userRepository2.save(user);
         return user;
@@ -92,12 +96,14 @@ public class ConnectionServiceImpl implements ConnectionService {
                 }
             }
 
-          sender = connect(senderId, receiver.getOriginalCountry().getCountryName().name());
-            if(!sender.getConnected()){
-                throw new Exception("Cannot establish communication");
-            }
 
-            return sender;
+        try {
+            sender = connect(senderId, receiver.getOriginalCountry().getCountryName().name());
+        }catch (Exception e){
+            throw new Exception("Cannot establish communication");
+        }
+
+        return sender;
 
     }
 }

@@ -24,6 +24,7 @@ public class ServiceProvider {
     private List<Country> countryList = new ArrayList<>();
 
     @ManyToMany
+    @JoinColumn
     private List<User> users = new ArrayList<>();
 
 
