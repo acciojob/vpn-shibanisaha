@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         user.setPassword(password);
         user.setConnected(false);
-        user.setCountry(countryCode);
+        user.setOriginalCountry(countryCode);
         user.setOriginalIp(countryCode.getCode()+"."+user.getId());
 
         //setting foreign key
