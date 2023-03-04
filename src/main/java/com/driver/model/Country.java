@@ -1,30 +1,31 @@
 // Note: Do not write @Enumerated annotation above CountryName in this model.
 package com.driver.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table(name ="country")
-public class Country {
-
+public class Country{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private CountryName countryName;
-
     private String code;
+    User user;
+    ServiceProvider serviceProvider;
 
-    @ManyToOne
-    @JoinColumn
-    private ServiceProvider serviceProvider;
+    public Country() {
+    }
 
-    @OneToOne(mappedBy = "country", cascade = CascadeType.ALL)
-    private User user;
-
-
-    /////////////////getter & setter//////////////
-
+    public Country(int id, CountryName countryName, String code, User user, ServiceProvider serviceProvider) {
+        this.id = id;
+        this.countryName = countryName;
+        this.code = code;
+        this.user = user;
+        this.serviceProvider = serviceProvider;
+    }
 
     public int getId() {
         return id;
@@ -50,14 +51,6 @@ public class Country {
         this.code = code;
     }
 
-    public ServiceProvider getServiceProvider() {
-        return serviceProvider;
-    }
-
-    public void setServiceProvider(ServiceProvider serviceProvider) {
-        this.serviceProvider = serviceProvider;
-    }
-
     public User getUser() {
         return user;
     }
@@ -65,5 +58,15 @@ public class Country {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public ServiceProvider getServiceProvider() {
+        return serviceProvider;
+    }
+
+    public void setServiceProvider(ServiceProvider serviceProvider) {
+        this.serviceProvider = serviceProvider;
+    }
 }
+
+
 
